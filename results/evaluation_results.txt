@@ -1,0 +1,23 @@
+UCI Student Performance (student-mat.csv)
+Rows used: 395
+Train rows: 316
+Test rows: 79
+Features: 30
+G1/G2/G3 used as inputs: no
+MAE: 3.009494
+RMSE: 3.761327
+R2: 0.310044
+Predictions within 0–20 before clipping: True
+
+Test-set examples (not clipped):
+     Actual G3  Predicted G3  Absolute Error
+78          10         9.663           0.337
+371         12         9.057           2.943
+248          5        10.210           5.210
+55          10        12.240           2.240
+390          9        10.063           1.063
+223         13         9.187           3.813
+42          18        14.597           3.403
+234          6        11.477           5.477
+316          0        10.327          10.327
+116         14        12.057           1.943

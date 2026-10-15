@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Performance Prediction System</title>
+  <meta name="description"
+    content="AI-powered student grade prediction system. Enter student details to predict final academic performance using a trained machine learning model." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+  <!-- Animated background grid -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🎓</span>
+        <div class="logo-text">
+          <span class="logo-title">GradeAI</span>
+          <span class="logo-sub">Student Performance Prediction</span>
+        </div>
+      </div>
+      <nav class="header-links" aria-label="API links">
+        <a href="/api/health" target="_blank" class="badge-link" id="link-health">API Health</a>
+        <a href="/api/schema" target="_blank" class="badge-link" id="link-schema">Schema</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container" role="main">
+    <div class="page-title-area">
+      <h1 class="page-title">Predict Student Performance</h1>
+      <p class="page-subtitle">
+        Enter student details below. Our ML model will predict the final grade (G3) on a <strong>0–100</strong> scale.
+      </p>
+    </div>
+
+    <div class="content-grid">
+      <!-- ── LEFT: Form Panel ── -->
+      <section class="form-panel glass-card" aria-label="Student Input Form">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span class="panel-icon">📋</span> Student Details
+          </h2>
+          <button type="button" class="btn-fill-sample" id="btn-fill-sample" title="Fill with sample data">
+            Fill Sample
+          </button>
+        </div>
+
+        <form id="predict-form" novalidate autocomplete="off">
+          <!-- Section: School Info -->
+          <div class="form-section">
+            <h3 class="section-label">School Information</h3>
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="school">School</label>
+                <select id="school" name="school" required>
+                  <option value="">-- Select --</option>
+                  <option value="GP">GP – Gabriel Pereira</option>
+                  <option value="MS">MS – Mousinho da Silveira</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="sex">Gender</label>
+                <select id="sex" name="sex" required>
+                  <option value="">-- Select --</option>
+                  <option value="F">Female</option>
+                  <option value="M">Male</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="age">Age <span class="range-hint">(15–22)</span></label>
+                <input type="number" id="age" name="age" min="15" max="22" placeholder="e.g. 17" required />
+              </div>
+              <div class="field-group">
+                <label for="address">Address Type</label>
+                <select id="address" name="address" required>
+                  <option value="">-- Select --</option>
+                  <option value="U">Urban</option>
+                  <option value="R">Rural</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="reason">Reason for School</label>
+                <select id="reason" name="reason" required>
+                  <option value="">-- Select --</option>
+                  <option value="home">Close to Home</option>
+                  <option value="reputation">School Reputation</option>
+                  <option value="course">Course Preference</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="guardian">Guardian</label>
+                <select id="guardian" name="guardian" required>
+                  <option value="">-- Select --</option>
+                  <option value="mother">Mother</option>
+                  <option value="father">Father</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Family Info -->
+          <div class="form-section">
+            <h3 class="section-label">Family Background</h3>
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="famsize">Family Size</label>
+                <select id="famsize" name="famsize" required>
+                  <option value="">-- Select --</option>
+                  <option value="LE3">≤ 3 members</option>
+                  <option value="GT3">> 3 members</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="Pstatus">Parent Status</label>
+                <select id="Pstatus" name="Pstatus" required>
+                  <option value="">-- Select --</option>
+                  <option value="T">Together</option>
+                  <option value="A">Apart</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="Mjob">Mother's Job</label>
+                <select id="Mjob" name="Mjob" required>
+                  <option value="">-- Select --</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="health">Health</option>
+                  <option value="services">Services</option>
+                  <option value="at_home">At Home</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="Fjob">Father's Job</label>
+                <select id="Fjob" name="Fjob" required>
+                  <option value="">-- Select --</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="health">Health</option>
+                  <option value="services">Services</option>
+                  <option value="at_home">At Home</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="Medu">Mother's Education <span class="range-hint">(0–4)</span></label>
+                <input type="number" id="Medu" name="Medu" min="0" max="4" placeholder="0=none, 4=higher" required />
+              </div>
+              <div class="field-group">
+                <label for="Fedu">Father's Education <span class="range-hint">(0–4)</span></label>
+                <input type="number" id="Fedu" name="Fedu" min="0" max="4" placeholder="0=none, 4=higher" required />
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="famrel">Family Relationship <span class="range-hint">(1–5)</span></label>
+                <input type="number" id="famrel" name="famrel" min="1" max="5" placeholder="1=very bad, 5=excellent"
+                  required />
+              </div>
+              <div class="field-group">
+                <label for="famsup">Family Educational Support</label>
+                <select id="famsup" name="famsup" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Academic Info -->
+          <div class="form-section">
+            <h3 class="section-label">Academic Profile</h3>
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="traveltime">Travel Time <span class="range-hint">(1–4)</span></label>
+                <input type="number" id="traveltime" name="traveltime" min="1" max="4" placeholder="1=<15min, 4=>1h"
+                  required />
+              </div>
+              <div class="field-group">
+                <label for="studytime">Study Time <span class="range-hint">(1–4)</span></label>
+                <input type="number" id="studytime" name="studytime" min="1" max="4" placeholder="1=<2h, 4=>10h"
+                  required />
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="failures">Past Failures <span class="range-hint">(0–4)</span></label>
+                <input type="number" id="failures" name="failures" min="0" max="4" placeholder="Number of failures"
+                  required />
+              </div>
+              <div class="field-group">
+                <label for="absences">Absences <span class="range-hint">(0–93)</span></label>
+                <input type="number" id="absences" name="absences" min="0" max="93" placeholder="School absences"
+                  required />
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="schoolsup">School Extra Support</label>
+                <select id="schoolsup" name="schoolsup" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="paid">Extra Paid Classes</label>
+                <select id="paid" name="paid" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="higher">Wants Higher Education</label>
+                <select id="higher" name="higher" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="internet">Internet at Home</label>
+                <select id="internet" name="internet" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Lifestyle -->
+          <div class="form-section">
+            <h3 class="section-label">Lifestyle &amp; Social</h3>
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="activities">Extra-curricular Activities</label>
+                <select id="activities" name="activities" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="nursery">Attended Nursery</label>
+                <select id="nursery" name="nursery" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="romantic">Romantic Relationship</label>
+                <select id="romantic" name="romantic" required>
+                  <option value="">-- Select --</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label for="freetime">Free Time <span class="range-hint">(1–5)</span></label>
+                <input type="number" id="freetime" name="freetime" min="1" max="5" placeholder="1=very low, 5=very high"
+                  required />
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="goout">Going Out <span class="range-hint">(1–5)</span></label>
+                <input type="number" id="goout" name="goout" min="1" max="5" placeholder="1=very low, 5=very high"
+                  required />
+              </div>
+              <div class="field-group">
+                <label for="health">Health Status <span class="range-hint">(1–5)</span></label>
+                <input type="number" id="health" name="health" min="1" max="5" placeholder="1=very bad, 5=very good"
+                  required />
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="field-group">
+                <label for="Dalc">Workday Alcohol <span class="range-hint">(1–5)</span></label>
+                <input type="number" id="Dalc" name="Dalc" min="1" max="5" placeholder="1=very low, 5=very high"
+                  required />
+              </div>
+              <div class="field-group">
+                <label for="Walc">Weekend Alcohol <span class="range-hint">(1–5)</span></label>
+                <input type="number" id="Walc" name="Walc" min="1" max="5" placeholder="1=very low, 5=very high"
+                  required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Error message area -->
+          <div id="form-error" class="form-error" role="alert" aria-live="polite" hidden></div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-predict" id="btn-predict">
+            <span class="btn-text">🔮 Predict Grade</span>
+            <span class="btn-loader" hidden aria-hidden="true"></span>
+          </button>
+        </form>
+      </section>
+
+      <!-- ── RIGHT: Result Panel ── -->
+      <aside class="result-panel" aria-label="Prediction Result" aria-live="polite">
+        <!-- Empty state -->
+        <div class="result-empty glass-card" id="result-empty">
+          <div class="empty-icon">📊</div>
+          <p class="empty-title">No Prediction Yet</p>
+          <p class="empty-sub">Fill in the student details on the left and click <strong>Predict Grade</strong>.</p>
+        </div>
+
+        <!-- Result card (hidden until prediction) -->
+        <div class="result-card glass-card" id="result-card" hidden>
+          <div class="result-header">
+            <h2 class="result-title">Prediction Result</h2>
+            <span class="result-badge" id="result-badge">–</span>
+          </div>
+
+          <!-- Circular gauge -->
+          <div class="gauge-container" aria-label="Grade gauge">
+            <svg class="gauge-svg" viewBox="0 0 220 220" aria-hidden="true">
+              <defs>
+                <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#06b6d4" />
+                  <stop offset="100%" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+              <circle class="gauge-bg" cx="110" cy="110" r="90" />
+              <circle class="gauge-fill" id="gauge-fill" cx="110" cy="110" r="90" stroke-dasharray="565.48"
+                stroke-dashoffset="565.48" />
+            </svg>
+            <div class="gauge-text">
+              <div class="gauge-score" id="gauge-score">–</div>
+              <div class="gauge-label">/ 100 %</div>
+            </div>
+          </div>
+
+          <!-- Stats grid -->
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-value" id="stat-pct">–</div>
+              <div class="stat-label">Percentage</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="stat-band">–</div>
+              <div class="stat-label">Performance Band</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="stat-latency">–</div>
+              <div class="stat-label">Latency (ms)</div>
+            </div>
+          </div>
+
+          <!-- Motivational message -->
+          <div class="motivation-box" id="motivation-box">
+            <p id="motivation-text"></p>
+          </div>
+
+          <!-- Raw JSON toggle -->
+          <details class="raw-details">
+            <summary class="raw-summary">View Raw API Response</summary>
+            <pre class="raw-json" id="raw-json"></pre>
+          </details>
+
+          <button type="button" class="btn-reset" id="btn-reset">↺ New Prediction</button>
+        </div>
+
+        <!-- How it works -->
+        <div class="info-card glass-card">
+          <h3 class="info-title">⚡ How It Works</h3>
+          <ol class="info-steps">
+            <li>Enter all 30 details of a single student in the form</li>
+            <li>Click <strong>Predict Grade</strong></li>
+            <li>Our Random Forest model processes your input</li>
+            <li>Get an instant predicted G3 grade (0–20 scale)</li>
+          </ol>
+          <div class="api-endpoints">
+            <p class="endpoint-title">REST API Endpoints</p>
+            <code class="endpoint">POST /api/predict</code>
+            <code class="endpoint">POST /api/predict/batch</code>
+            <code class="endpoint">GET &nbsp;/api/health</code>
+            <code class="endpoint">GET &nbsp;/api/schema</code>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Student Performance Prediction System &mdash; Powered by Flask + scikit-learn (Random Forest)</p>
+  </footer>
+
+  <script>
+    // ─── Random sample generator ──────────────────────────────────────
+    // Picks a random valid value for every field on each click.
+    const SCHEMA = {
+      categorical: {
+        school: ["GP", "MS"],
+        sex: ["F", "M"],
+        address: ["U", "R"],
+        famsize: ["LE3", "GT3"],
+        Pstatus: ["T", "A"],
+        Mjob: ["teacher", "health", "services", "at_home", "other"],
+        Fjob: ["teacher", "health", "services", "at_home", "other"],
+        reason: ["home", "reputation", "course", "other"],
+        guardian: ["mother", "father", "other"],
+        schoolsup: ["yes", "no"],
+        famsup: ["yes", "no"],
+        paid: ["yes", "no"],
+        activities: ["yes", "no"],
+        nursery: ["yes", "no"],
+        higher: ["yes", "no"],
+        internet: ["yes", "no"],
+        romantic: ["yes", "no"],
+      },
+      numeric: {
+        age: [15, 22],
+        Medu: [0, 4],
+        Fedu: [0, 4],
+        traveltime: [1, 4],
+        studytime: [1, 4],
+        failures: [0, 4],
+        famrel: [1, 5],
+        freetime: [1, 5],
+        goout: [1, 5],
+        Dalc: [1, 5],
+        Walc: [1, 5],
+        health: [1, 5],
+        absences: [0, 93],
+      }
+    };
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function randInt(lo, hi) { return Math.floor(Math.random() * (hi - lo + 1)) + lo; }
+
+    function randomSample() {
+      const s = {};
+      Object.entries(SCHEMA.categorical).forEach(([k, opts]) => s[k] = pick(opts));
+      Object.entries(SCHEMA.numeric).forEach(([k, [lo, hi]]) => s[k] = randInt(lo, hi));
+      return s;
+    }
+
+    const MOTIVATIONS = {
+      "Excellent": "🌟 Outstanding performance! Keep up the brilliant work!",
+      "Good": "👍 Great effort! A little more focus will take you to the top.",
+      "Average": "📚 You're on the right track. Consistent study time will help you grow.",
+      "Needs Improvement": "💪 Don't give up! Seek support, study regularly, and you'll improve.",
+    };
+
+    const BAND_COLORS = {
+      "Excellent": "band-success",
+      "Good": "band-info",
+      "Average": "band-warning",
+      "Needs Improvement": "band-danger",
+    };
+
+    // ─── Fill random sample ───────────────────────────────────────────
+    document.getElementById("btn-fill-sample").addEventListener("click", () => {
+      const sample = randomSample();
+      Object.entries(sample).forEach(([key, val]) => {
+        const el = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+        if (el) el.value = val;
+      });
+      clearError();
+    });
+
+    // ─── Reset ───────────────────────────────────────────────────────
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      document.getElementById("predict-form").reset();
+      document.getElementById("result-card").hidden = true;
+      document.getElementById("result-empty").hidden = false;
+      clearError();
+    });
+
+    // ─── Helpers ─────────────────────────────────────────────────────
+    function showError(msg) {
+      const el = document.getElementById("form-error");
+      el.textContent = msg;
+      el.hidden = false;
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    function clearError() {
+      const el = document.getElementById("form-error");
+      el.textContent = "";
+      el.hidden = true;
+    }
+    function setLoading(on) {
+      const btn = document.getElementById("btn-predict");
+      const text = btn.querySelector(".btn-text");
+      const spin = btn.querySelector(".btn-loader");
+      btn.disabled = on;
+      text.hidden = on;
+      spin.hidden = !on;
+    }
+
+    // ─── Build payload from form ──────────────────────────────────────
+    function buildPayload() {
+      const numFields = ["age", "Medu", "Fedu", "traveltime", "studytime", "failures",
+        "famrel", "freetime", "goout", "Dalc", "Walc", "health", "absences"];
+      const form = document.getElementById("predict-form");
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      numFields.forEach(f => { if (f in data) data[f] = Number(data[f]); });
+      return data;
+    }
+
+    // ─── Update gauge (accepts 0–100 percentage) ──────────────────────
+    function animateGauge(pct100) {
+      const circumference = 565.48;
+      const pct = pct100 / 100;
+      const offset = circumference - pct * circumference;
+      const fill = document.getElementById("gauge-fill");
+
+      fill.style.transition = "none";
+      fill.style.strokeDashoffset = circumference;
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          fill.style.transition = "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)";
+          fill.style.strokeDashoffset = offset;
+        });
+      });
+    }
+
+    // ─── Show result ─────────────────────────────────────────────────
+    function showResult(data) {
+      const p = data.prediction;
+
+      document.getElementById("result-empty").hidden = true;
+      document.getElementById("result-card").hidden = false;
+
+      // Score — display as percentage out of 100
+      document.getElementById("gauge-score").textContent = p.percentage;
+      animateGauge(p.percentage);
+
+      // Badge
+      const badge = document.getElementById("result-badge");
+      badge.textContent = p.performance_band;
+      badge.className = "result-badge " + (BAND_COLORS[p.performance_band] || "");
+
+      // Stats
+      document.getElementById("stat-pct").textContent = p.percentage + "%";
+      document.getElementById("stat-band").textContent = p.performance_band;
+      document.getElementById("stat-latency").textContent = data.latency_ms + " ms";
+
+      // Motivation
+      document.getElementById("motivation-text").textContent =
+        MOTIVATIONS[p.performance_band] || "Keep learning!";
+
+      // Raw JSON
+      document.getElementById("raw-json").textContent = JSON.stringify(data, null, 2);
+
+      document.getElementById("result-card").scrollIntoView({ behavior: "smooth" });
+    }
+
+    // ─── Form submit ─────────────────────────────────────────────────
+    document.getElementById("predict-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearError();
+
+      const payload = buildPayload();
+
+      // Client-side completeness check
+      const missing = Object.entries(payload)
+        .filter(([, v]) => v === "" || v === null || v === undefined)
+        .map(([k]) => k);
+      if (missing.length) {
+        showError(`Please fill in: ${missing.join(", ")}`);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const resp = await fetch("/api/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const json = await resp.json();
+
+        if (!resp.ok || json.status !== "ok") {
+          showError(json.message || `Error ${resp.status}: Prediction failed.`);
+          return;
+        }
+        showResult(json);
+      } catch (err) {
+        showError("Network error – is the Flask server running?");
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+
+</html>
